@@ -11,17 +11,42 @@
 <body>
     <a href="index.html">Wroc</a><br/>
 
-    <canvas id="circle 1" width="800" height="600" style="border:2px solid #d3d3d3;">
+    <p> 1. Koło zmienia swój kolor co sekundę z zielonego na niebieski </p>
+    <canvas id="circle_1" width="800" height="600" style="border:2px solid #d3d3d3;"> </canvas><br />
+    <p> 2. Koło zmienia swój kolor co sekundę z zielonego na niebieski płynnie na zasadzie gradientu </p>
+    <canvas id="circle_2" width="800" height="600" style="border:2px solid #d3d3d3;"> </canvas>
+    <p> 3. Koło zmienia swój kolor co sekundę z zielonego na niebieski płynnie na zasadzie gradientu jednocześnie płynnie odbijając się od podłoża </p>
+    <canvas id="circle_3" width="800" height="600" style="border:2px solid #d3d3d3;"> </canvas>
     <script>
         // helper functions
-        function changeColor(i, ctx) {
-            var color =[ "green", "blue"];
-            ctx.fillStyle = color[i];
+        function setColor(ctx, color) {
+            ctx.fillStyle = color;
             ctx.fill();
+        }
+        function rgb(r, g, b){
+            return "rgb("+r+","+g+","+b+")";
+        }
+        function smoothColorChange(ctx) {
+            var diff = 0;
+            var increase = true;
+            var increaseRatio = 5;
+            var numberOfSteps = 255 / increaseRatio;
+            setInterval(function changebackground(){
+                setColor(ctx, rgb(0, 255 - diff, diff));
+                increase ? diff+=increaseRatio : diff-=increaseRatio;
+                if (diff > 255 - increaseRatio)
+                {
+                    increase = false;
+                }
+                if (diff < increaseRatio)
+                {
+                    increase = true;
+                }
+            },1000 / numberOfSteps);
         }
 
         // Draw circle 1
-        var c = document.getElementById("circle 1");
+        var c = document.getElementById("circle_1");
         var ctx = c.getContext("2d");
         ctx.beginPath();
         var radius;
@@ -36,9 +61,25 @@
 
         // Set background changer
         var colorInc = 0;
-        var colorsCnt = 2;
-        changeColor(colorInc++, ctx);
-        setInterval(function changebackground(){changeColor(colorInc, ctx); if (++colorInc == colorsCnt){colorInc = 0;}},1000);
+        var colors =[ "green", "blue"];
+        setColor(ctx, colors[colorInc++]);
+        setInterval(function changebackground(){setColor(ctx, colors[colorInc]); if (++colorInc >= colors.length){colorInc = 0;}},1000);
+
+        // Draw circle 2
+        var c2 = document.getElementById("circle_2");
+        var ctx2 = c2.getContext("2d");
+        ctx2.beginPath();
+        var radius2;
+        if (c2.offsetWidth < c2.offsetHeight) {
+            radius2 = c2.offsetWidth / 4.0;
+        }
+        else {
+            radius2 = c2.offsetHeight / 4.0;
+        }
+        ctx2.arc(c2.offsetWidth / 2.0, c2.offsetHeight / 2.0, radius2, 0, 2 * Math.PI);
+        ctx2.stroke();
+        setColor(ctx2, 'rgb(0, 255, 0)');
+        smoothColorChange(ctx2)
     </script>
 </body>
 </html>
