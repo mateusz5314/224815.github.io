@@ -10,10 +10,18 @@
 
 <body>
     <a href="index.html">Wroc</a><br/>
-    
-    <canvas id="circle" width="800" height="600" style="border:2px solid #d3d3d3;">
+
+    <canvas id="circle 1" width="800" height="600" style="border:2px solid #d3d3d3;">
     <script>
-        var c = document.getElementById("circle");
+        // helper functions
+        function changeColor(i, ctx) {
+            var color =[ "green", "blue"];
+            ctx.fillStyle = color[i];
+            ctx.fill();
+        }
+
+        // Draw circle 1
+        var c = document.getElementById("circle 1");
         var ctx = c.getContext("2d");
         ctx.beginPath();
         var radius;
@@ -25,6 +33,12 @@
         }
         ctx.arc(c.offsetWidth / 2.0, c.offsetHeight / 2.0, radius, 0, 2 * Math.PI);
         ctx.stroke();
+
+        // Set background changer
+        var colorInc = 0;
+        var colorsCnt = 2;
+        changeColor(colorInc++, ctx);
+        setInterval(function changebackground(){changeColor(colorInc, ctx); if (++colorInc == colorsCnt){colorInc = 0;}},1000);
     </script>
 </body>
 </html>
