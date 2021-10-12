@@ -17,7 +17,7 @@
         var ctx = c.getContext("2d");
         ctx.beginPath();
         var radius;
-        if (c.offsetWidth > c.offsetHeight) {
+        if (c.offsetWidth < c.offsetHeight) {
             radius = c.offsetWidth / 4.0;
         }
         else {
