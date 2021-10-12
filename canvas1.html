@@ -44,6 +44,27 @@
                 }
             },1000 / numberOfSteps);
         }
+        function bounce(c, ctx, radius) {
+            var diff = 0;
+            var increase = true;
+            var increaseRatio = 5;
+            var numberOfSteps = 255 / increaseRatio;
+            setInterval(function move(){
+                c.width = c.width;
+                ctx.arc(c.offsetWidth / 2.0, c.offsetHeight / 3.0 + diff, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+                setColor(ctx, rgb(0, 255 - diff, diff));
+                increase ? diff+=increaseRatio : diff-=increaseRatio;
+                if (diff > 255 - increaseRatio)
+                {
+                    increase = false;
+                }
+                if (diff < increaseRatio)
+                {
+                    increase = true;
+                }
+            },1000 / numberOfSteps);
+        }
 
         // Draw circle 1
         var c = document.getElementById("circle_1");
@@ -80,6 +101,22 @@
         ctx2.stroke();
         setColor(ctx2, 'rgb(0, 255, 0)');
         smoothColorChange(ctx2)
+
+        // Draw circle 3
+        var c3 = document.getElementById("circle_3");
+        var ctx3 = c3.getContext("2d");
+        ctx3.beginPath();
+        var radius3;
+        if (c3.offsetWidth < c3.offsetHeight) {
+            radius3 = c3.offsetWidth / 4.0;
+        }
+        else {
+            radius3 = c3.offsetHeight / 4.0;
+        }
+        ctx3.arc(c3.offsetWidth / 2.0, c3.offsetHeight / 2.0, radius3, 0, 2 * Math.PI);
+        ctx3.stroke();
+        setColor(ctx3, 'rgb(0, 255, 0)');
+        bounce(c3, ctx3, radius3);
     </script>
 </body>
 </html>
