@@ -11,8 +11,29 @@
 <body>
     <a href="index.html">Wroc</a><br/>
 
+    <canvas id="bubbleGame" width="800" height="600" style="border:2px solid #d3d3d3;"> </canvas><br />
     <script>
-        
+        // helper functions
+
+        // change color
+        function setColor(ctx, color) {
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        // define canvas and create context
+        var canvas = document.getElementById("bubbleGame");
+        var ctx = canvas.getContext("2d");
+
+        // define rectangle params
+        const rectWidth = canvas.offsetWidth / 6.0;
+        const rectHeight = canvas.offsetWidth / 20.0;
+        const rectPositionY = canvas.offsetHeight - rectHeight / 2.0;
+        var rectPositionX = canvas.offsetWidth / 2.0 - rectWidth / 2.0;
+
+        // create rectangle
+        rect = ctx.rect(rectPositionX, rectPositionY, rectPositionX + rectWidth, rectPositionY + rectHeight);
+        ctx.stroke();
     </script>
 </body>
 </html>
