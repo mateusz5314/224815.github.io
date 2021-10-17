@@ -31,36 +31,39 @@
         {
             switch (event.key) {
                 case "ArrowLeft":
-                    refreshRect(canvas, ctx, rect, -1)
+                    refreshRect(-1)
                     break;
                 case "ArrowRight":
-                    refreshRect(canvas, ctx, rect, 1)
+                    refreshRect(1)
                     break;
             }
         }
 
         // refresh rectange image
-        function refreshRect(canvas, ctx, rect, sign)
+        function refreshRect(sign)
         {
             const diff = 10;
             canvas.width = canvas.width;
             rectPositionX = rectPositionX + diff * sign;
-            rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
-            setColor(ctx, rectColor);
-            ctx.stroke();
+            rect = rectCtx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+            setColor(rectCtx, rectColor);
+            rectCtx.fill();
         }
 
         // create bullets params and define shot loop
-        function startShooting(canvas, ctx)
+        function startShooting()
         {
+            var arcCtx = canvas.getContext("2d");
+            const arcColor = rgb(0, 0, 180);
             const radius = canvas.offsetWidth / 40.0;
-            ctx.arc(canvas.offsetWidth / 2.0, canvas.offsetHeight / 2.0, radius, 0, 2 * Math.PI);
-            ctx.stroke();
+            arc = arcCtx.arc(canvas.offsetWidth / 2.0, canvas.offsetHeight / 2.0, radius, 0, 2 * Math.PI);
+            setColor(arcCtx, arcColor);
+            arcCtx.fill();
         }
 
         // define canvas and create context
         var canvas = document.getElementById("bubbleGame");
-        var ctx = canvas.getContext("2d");
+        var rectCtx = canvas.getContext("2d");
 
         // define rectangle params
         const rectColor = rgb(231, 123, 132);
@@ -70,15 +73,15 @@
         var rectPositionX = canvas.offsetWidth / 2.0 - rectWidth / 2.0;
 
         // create rectangle
-        rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
-        setColor(ctx, rectColor);
-        ctx.stroke();
+        rect = rectCtx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+        setColor(rectCtx, rectColor);
+        rectCtx.stroke();
 
         // register events
         window.addEventListener('keydown', this.keyCallback, event)
 
         // set up shooter
-        startShooting(canvas, ctx)
+        startShooting(canvas)
 
     </script>
 </body>
