@@ -26,14 +26,15 @@
         var ctx = canvas.getContext("2d");
 
         // define rectangle params
-        const rectWidth = canvas.offsetWidth / 6.0;
-        const rectHeight = canvas.offsetWidth / 20.0;
-        const rectPositionY = canvas.offsetHeight - rectHeight / 2.0;
+        const rectWidth = canvas.offsetWidth / 8.0;
+        const rectHeight = canvas.offsetWidth / 40.0;
+        const rectPositionY = canvas.offsetHeight - rectHeight;
         var rectPositionX = canvas.offsetWidth / 2.0 - rectWidth / 2.0;
 
         // create rectangle
-        rect = ctx.rect(rectPositionX, rectPositionY, rectPositionX + rectWidth, rectPositionY + rectHeight);
+        rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
         ctx.stroke();
+
     </script>
 </body>
 </html>
