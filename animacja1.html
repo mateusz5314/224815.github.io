@@ -43,7 +43,7 @@
                 updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
             }
             updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
-            updateTargets();
+            updateTargets(targetsPositionX, targetPositionY, targetRadius, targetColor);
         }
 
         // refresh rectange image
@@ -88,11 +88,11 @@
         }
 
         // update all targets
-        function updateTargets(){
-            ctx.fillStyle = targetColor;
-            for (const x of targetsPositionX)
+        function updateTargets(xTable, y, r, color){
+            for (const x of xTable)
             {
-                ctx.arc(x, targetPositionY, targetRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = color;
+                target = ctx.arc(x, y, r, 0, 2 * Math.PI);
                 ctx.fill();
             }
         }
