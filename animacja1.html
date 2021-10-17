@@ -21,6 +21,37 @@
             ctx.fill();
         }
 
+        // arrow listener
+        function moveRect(key)
+        {
+            switch (event.key) {
+                case "ArrowLeft":
+                    refreshRect(canvas, ctx, rect, -1)
+                    break;
+                case "ArrowRight":
+                    refreshRect(canvas, ctx, rect, 1)
+                    break;
+            }
+            canvas.width = canvas.width;
+            rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+            ctx.stroke();
+            setColor(ctx, rgb(0, 255 - diff, diff));
+            increase ? diff+=increaseRatio : diff-=increaseRatio;
+            if (diff > 255 - increaseRatio)
+            {
+                increase = false;
+            }
+            if (diff < increaseRatio)
+            {
+                increase = true;
+            }
+        }
+
+        function refreshRect(canvas, ctx, rect, sign)
+        {
+            prompt(1)
+        }
+
         // define canvas and create context
         var canvas = document.getElementById("bubbleGame");
         var ctx = canvas.getContext("2d");
@@ -34,6 +65,9 @@
         // create rectangle
         rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
         ctx.stroke();
+
+        // register events
+        window.addEventListener('keydown', moveRect(event))
 
     </script>
 </body>
