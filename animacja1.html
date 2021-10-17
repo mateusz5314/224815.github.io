@@ -11,7 +11,11 @@
 <body>
     <a href="index.html">Wroc</a><br/>
 
+    <p>Use arrows to move and space to shot. Be careful! When more than 4 bubbles will spawn you will lose your live.</p>
+    <p id="gameover">Good luck!</p>
     <canvas id="bubbleGame" width="800" height="600" style="border:2px solid #d3d3d3;"> </canvas><br />
+    <p>Score: </p></p><p id="score"></p><br />
+    <p>Lives: </p></p><p id="lives"></p><br />
     <script>
         // helper functions
 
@@ -31,13 +35,25 @@
         function keyCallback(event){
             switch (event.key) {
                 case "ArrowLeft":
-                    refreshRect(-1)
+                    refreshRect(-1);
                     break;
                 case "ArrowRight":
-                    refreshRect(1)
+                    refreshRect(1);
                     break;
                 case " ":
-                    shot()
+                    if (lives > 0){
+                        shot();
+                    } else {
+                        lives = maxLives;
+                        score = 0;
+                        document.getElementById(gameOverId).innerHTML = gameInProgressTxt;
+                        targetLoop = setInterval(function newTarget(){
+                                                    generateTarget();
+                                                } , newTargetDelay);
+                        refreshLoop = setInterval(function refresh(){
+                                                    refreshScene();
+                                                } , sceneRefreshDelay);
+                    }
                     break;
             }
         }
@@ -51,18 +67,23 @@
             }
             updateTargets(targetsPositionX, targetPositionY, targetRadius, targetColor);
             updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
+            document.getElementById(scoreId).innerHTML = score;
+            document.getElementById(livesId).innerHTML = lives;
+            if (lives == 0){
+                gameOver();
+            }
         }
 
         // refresh rectange image
         function refreshRect(sign){
-            const rectStep = 10;
+            const rectStep = 20;
             rectPositionX = rectPositionX + rectStep * sign;
         }
 
         // create bullets params and define shot loop
         function shot(){
             const bulletDelay = 5;
-            const bulletStep = 5;
+            const bulletStep = 6;
             if (bulletPositionX == 0){
                 bulletPositionX = rectPositionX + rectWidth / 2.0;
                 bulletPositionY = rectPositionY - bulletRadius;
@@ -79,6 +100,7 @@
                                 bulletPositionX - bulletRadius < targetsPositionX[i] + targetRadius)
                             {
                                 targetsPositionX.splice(i, 1);
+                                ++score;
                                 clearInterval(bulletMove);
                                 bulletPositionX = 0;
                                 break;
@@ -108,6 +130,9 @@
             if (targetsPositionX.length < 4){
                 var newPositionX = getRandomInt(targetRadius, canvas.width - targetRadius);
                 targetsPositionX.push(newPositionX);
+            } else {
+                --lives;
+                targetsPositionX = [];
             }
         }
 
@@ -120,6 +145,14 @@
                 target = ctx.arc(x, y, r, 0, 2 * Math.PI);
                 ctx.fill();
             }
+        }
+
+        // gave over flow
+        function gameOver(){
+            targetsPositionX = [];
+            clearInterval(targetLoop);
+            clearInterval(refreshLoop);
+            document.getElementById(gameOverId).innerHTML = gameOverTxt;
         }
 
         // define canvas and create context
@@ -152,16 +185,28 @@
         const targetRadius = bulletRadius * 3;
         const targetPositionY = targetRadius + 10;
         var targetsPositionX = [];
-        const newTargetDelay = 2000;
-        setInterval(function newTarget(){
-                generateTarget();
-             } , newTargetDelay);
+        var newTargetDelay = 1000;
+        var targetLoop = setInterval(function newTarget(){
+                                            generateTarget();
+                                        }, newTargetDelay);
 
         // settings scene refresh params
         const sceneRefreshDelay = 10;
-        setInterval(function refresh(){
-                refreshScene();
-             } , sceneRefreshDelay);
+        var refreshLoop = setInterval(function refresh(){
+                                            refreshScene();
+                                        }, sceneRefreshDelay);
+
+        // set score dependencies
+        const scoreId = 'score';
+        var score = 0;
+
+        // set lives dependencies
+        const gameOverId = "gameover";
+        const gameOverTxt = "Game Over!!! Press space to try again.";
+        const gameInProgressTxt = "Good luck!";
+        const livesId = 'lives';
+        const maxLives = 3;
+        var lives = maxLives;
 
     </script>
 </body>
