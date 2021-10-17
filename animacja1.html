@@ -30,6 +30,9 @@
                 case "ArrowRight":
                     refreshRect(1)
                     break;
+                case " ":
+                    shot()
+                    break;
             }
         }
 
@@ -37,7 +40,9 @@
         function refreshScene()
         {
             canvas.width = canvas.width;
-            updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
+            if (bulletPositionX != 0){
+                updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
+            }
             updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
         }
 
@@ -49,17 +54,21 @@
         }
 
         // create bullets params and define shot loop
-        function startShooting()
+        function shot()
         {
             const bulletDelay = 5;
             const bulletStep = 1;
-            setInterval(function a(){
-                bulletPositionY -= bulletStep;
-                if (bulletPositionY < 0){
-                    bulletPositionX = rectPositionX + rectWidth / 2.0;
-                    bulletPositionY = rectPositionY - bulletRadius;
-                }
-             } , bulletDelay);
+            if (bulletPositionX == 0){
+                bulletPositionX = rectPositionX + rectWidth / 2.0;
+                bulletPositionY = rectPositionY - bulletRadius;
+                var bulletMove = setInterval(function a(){
+                    bulletPositionY -= bulletStep;
+                    if (bulletPositionY < 0){
+                        clearInterval(bulletMove);
+                        bulletPositionX = 0;
+                    }
+                } , bulletDelay);
+            }
         }
 
         // update bubble
@@ -96,12 +105,11 @@
         // register events
         window.addEventListener('keydown', this.keyCallback, event)
 
-        // set up shooter
+        // set up bullet params
         const bulletColor = rgb(0, 0, 180);
         const bulletRadius = rectHeight / 2.0;
-        var bulletPositionX = rectPositionX + rectWidth / 2.0;
-        var bulletPositionY = rectPositionY - bulletRadius;
-        startShooting()
+        var bulletPositionX = 0;
+        var bulletPositionY = 0;
 
         // settings scene refresh params
         const sceneRefreshDelay = 33;
