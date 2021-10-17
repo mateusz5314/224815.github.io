@@ -22,7 +22,7 @@
         }
 
         // arrow listener
-        function moveRect(key)
+        function keyCallback(event)
         {
             switch (event.key) {
                 case "ArrowLeft":
@@ -32,24 +32,24 @@
                     refreshRect(canvas, ctx, rect, 1)
                     break;
             }
-            canvas.width = canvas.width;
-            rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
-            ctx.stroke();
-            setColor(ctx, rgb(0, 255 - diff, diff));
-            increase ? diff+=increaseRatio : diff-=increaseRatio;
-            if (diff > 255 - increaseRatio)
-            {
-                increase = false;
-            }
-            if (diff < increaseRatio)
-            {
-                increase = true;
-            }
         }
 
         function refreshRect(canvas, ctx, rect, sign)
         {
-            prompt(1)
+            prompt(sign)
+            // canvas.width = canvas.width;
+            // rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+            // ctx.stroke();
+            // setColor(ctx, rgb(0, 255 - diff, diff));
+            // increase ? diff+=increaseRatio : diff-=increaseRatio;
+            // if (diff > 255 - increaseRatio)
+            // {
+            //     increase = false;
+            // }
+            // if (diff < increaseRatio)
+            // {
+            //     increase = true;
+            // }
         }
 
         // define canvas and create context
@@ -67,7 +67,7 @@
         ctx.stroke();
 
         // register events
-        window.addEventListener('keydown', moveRect(event))
+        window.addEventListener('keydown', this.keyCallback, event)
 
     </script>
 </body>
