@@ -44,17 +44,21 @@
         // refresh rectange image
         function refreshRect(sign)
         {
-            const diff = 10;
-            rectPositionX = rectPositionX + diff * sign;
+            const rectStep = 10;
+            rectPositionX = rectPositionX + rectStep * sign;
         }
 
         // create bullets params and define shot loop
         function startShooting()
         {
-            const bulletDelay = 50;
-            const bulletStep = 2;
+            const bulletDelay = 5;
+            const bulletStep = 1;
             setInterval(function a(){
                 bulletPositionY -= bulletStep;
+                if (bulletPositionY < 0){
+                    bulletPositionX = rectPositionX + rectWidth / 2.0;
+                    bulletPositionY = rectPositionY - bulletRadius;
+                }
              } , bulletDelay);
         }
 
