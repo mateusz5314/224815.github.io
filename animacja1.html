@@ -33,22 +33,29 @@
             }
         }
 
+        // function is refreshing scene, redraw all elements
+        function refreshScene()
+        {
+            canvas.width = canvas.width;
+            updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
+            updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
+        }
+
         // refresh rectange image
         function refreshRect(sign)
         {
             const diff = 10;
             rectPositionX = rectPositionX + diff * sign;
-            canvas.width = canvas.width;
-            ctx.fillStyle = rectColor;
-            rect = ctx.fillRect(rectPositionX, rectPositionY, rectWidth, rectHeight);
-            ctx.fill();
-            updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
         }
 
         // create bullets params and define shot loop
         function startShooting()
         {
-            updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
+            const bulletDelay = 50;
+            const bulletStep = 2;
+            setInterval(function a(){
+                bulletPositionY -= bulletStep;
+             } , bulletDelay);
         }
 
         // update bubble
@@ -57,6 +64,13 @@
             ctx.fillStyle = color;
             arc = ctx.arc(x, y, r, 0, 2 * Math.PI);
             ctx.fill();
+        }
+
+        // update rect
+        function updateRect(x, y, w, h, color)
+        {
+            ctx.fillStyle = rectColor;
+            rect = ctx.fillRect(x, y, w, h);
         }
 
         // define canvas and create context
@@ -84,6 +98,12 @@
         var bulletPositionX = rectPositionX + rectWidth / 2.0;
         var bulletPositionY = rectPositionY - bulletRadius;
         startShooting()
+
+        // settings scene refresh params
+        const sceneRefreshDelay = 33;
+        setInterval(function refresh(){
+                refreshScene();
+             } , sceneRefreshDelay);
 
     </script>
 </body>
