@@ -38,6 +38,7 @@
         {
             const diff = 10;
             rectPositionX = rectPositionX + diff * sign;
+            canvas.width = canvas.width;
             ctx.fillStyle = rectColor;
             rect = ctx.fillRect(rectPositionX, rectPositionY, rectWidth, rectHeight);
             ctx.fill();
