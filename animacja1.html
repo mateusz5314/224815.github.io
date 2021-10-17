@@ -77,7 +77,11 @@
         // refresh rectange image
         function refreshRect(sign){
             const rectStep = 20;
-            rectPositionX = rectPositionX + rectStep * sign;
+            var newRectPositionX = rectPositionX + (rectStep * sign);
+            if (newRectPositionX >= 0 - rectStep && newRectPositionX + rectWidth <= canvas.offsetWidth + rectStep)
+            {
+                rectPositionX = newRectPositionX;
+            }
         }
 
         // create bullets params and define shot loop
@@ -128,7 +132,7 @@
         // generate new target
         function generateTarget(){
             if (targetsPositionX.length < 4){
-                var newPositionX = getRandomInt(targetRadius, canvas.width - targetRadius);
+                var newPositionX = getRandomInt(targetRadius, canvas.offsetWidth - targetRadius);
                 targetsPositionX.push(newPositionX);
             } else {
                 --lives;
