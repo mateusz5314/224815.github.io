@@ -15,6 +15,11 @@
     <script>
         // helper functions
 
+        // generate rgb string from integer values
+        function rgb(r, g, b){
+            return "rgb("+r+","+g+","+b+")";
+        }
+
         // change color
         function setColor(ctx, color) {
             ctx.fillStyle = color;
@@ -34,12 +39,22 @@
             }
         }
 
+        // refresh rectange image
         function refreshRect(canvas, ctx, rect, sign)
         {
             const diff = 10;
             canvas.width = canvas.width;
             rectPositionX = rectPositionX + diff * sign;
             rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+            setColor(ctx, rectColor);
+            ctx.stroke();
+        }
+
+        // create bullets params and define shot loop
+        function startShooting(canvas, ctx)
+        {
+            const radius = canvas.offsetWidth / 40.0;
+            ctx.arc(canvas.offsetWidth / 2.0, canvas.offsetHeight / 2.0, radius, 0, 2 * Math.PI);
             ctx.stroke();
         }
 
@@ -48,6 +63,7 @@
         var ctx = canvas.getContext("2d");
 
         // define rectangle params
+        const rectColor = rgb(231, 123, 132);
         const rectWidth = canvas.offsetWidth / 8.0;
         const rectHeight = canvas.offsetWidth / 40.0;
         const rectPositionY = canvas.offsetHeight - rectHeight;
@@ -55,10 +71,14 @@
 
         // create rectangle
         rect = ctx.rect(rectPositionX, rectPositionY, rectWidth, rectHeight);
+        setColor(ctx, rectColor);
         ctx.stroke();
 
         // register events
         window.addEventListener('keydown', this.keyCallback, event)
+
+        // set up shooter
+        startShooting(canvas, ctx)
 
     </script>
 </body>
