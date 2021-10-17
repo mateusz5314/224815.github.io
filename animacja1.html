@@ -15,6 +15,13 @@
     <script>
         // helper functions
 
+        // generate random integer number
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
         // generate rgb string from integer values
         function rgb(r, g, b){
             return "rgb("+r+","+g+","+b+")";
@@ -42,8 +49,8 @@
             if (bulletPositionX != 0){
                 updateBubble(bulletPositionX, bulletPositionY, bulletRadius, bulletColor);
             }
-            updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
             updateTargets(targetsPositionX, targetPositionY, targetRadius, targetColor);
+            updateRect(rectPositionX, rectPositionY, rectWidth, rectHeight, rectColor);
         }
 
         // refresh rectange image
@@ -55,7 +62,7 @@
         // create bullets params and define shot loop
         function shot(){
             const bulletDelay = 5;
-            const bulletStep = 1;
+            const bulletStep = 5;
             if (bulletPositionX == 0){
                 bulletPositionX = rectPositionX + rectWidth / 2.0;
                 bulletPositionY = rectPositionY - bulletRadius;
@@ -65,6 +72,19 @@
                         clearInterval(bulletMove);
                         bulletPositionX = 0;
                     }
+                    else if (bulletPositionY < targetPositionY + targetRadius){
+                        for (var i = 0; i < targetsPositionX.length; i++)
+                        {
+                            if (bulletPositionX + bulletRadius > targetsPositionX[i] - targetRadius &&
+                                bulletPositionX - bulletRadius < targetsPositionX[i] + targetRadius)
+                            {
+                                targetsPositionX.splice(i, 1);
+                                clearInterval(bulletMove);
+                                bulletPositionX = 0;
+                                break;
+                            }
+                        }
+                    }
                 } , bulletDelay);
             }
         }
@@ -72,6 +92,7 @@
         // update bubble
         function updateBubble(x, y, r, color){
             ctx.fillStyle = color;
+            ctx.beginPath()
             arc = ctx.arc(x, y, r, 0, 2 * Math.PI);
             ctx.fill();
         }
@@ -84,7 +105,10 @@
 
         // generate new target
         function generateTarget(){
-            targetsPositionX.push(200);
+            if (targetsPositionX.length < 4){
+                var newPositionX = getRandomInt(targetRadius, canvas.width - targetRadius);
+                targetsPositionX.push(newPositionX);
+            }
         }
 
         // update all targets
@@ -92,6 +116,7 @@
             for (const x of xTable)
             {
                 ctx.fillStyle = color;
+                ctx.beginPath()
                 target = ctx.arc(x, y, r, 0, 2 * Math.PI);
                 ctx.fill();
             }
@@ -127,13 +152,13 @@
         const targetRadius = bulletRadius * 3;
         const targetPositionY = targetRadius + 10;
         var targetsPositionX = [];
-        const newTargetDelay = 500;
+        const newTargetDelay = 2000;
         setInterval(function newTarget(){
                 generateTarget();
              } , newTargetDelay);
 
         // settings scene refresh params
-        const sceneRefreshDelay = 33;
+        const sceneRefreshDelay = 10;
         setInterval(function refresh(){
                 refreshScene();
              } , sceneRefreshDelay);
