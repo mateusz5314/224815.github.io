@@ -29,18 +29,22 @@
         const carL = 'animacja3-img\\carL.png';
         const carR = 'animacja3-img\\carR.png';
 
-        var roadUpdateDelay = 50;
+        var roadUpdateDelay = 40;
+        var roadDirection = "s";
+        var roadXposition = 50;
         var roadImgStack = [];
         var roadXStack = [];
         var roadYStack = [];
         var roadWStack = [];
         var roadHStack = [];
 
-        addRoadToStack(road, 0, 0, 200, 100);
+        var images = [];
+
+        addRoadToStack(road, roadXposition, 0, 200, 100);
 
         function setImg(src, x, y, w, h)
         {
-            img = new Image();
+            var img = new Image();
             img.addEventListener('load', function() {
                 context.drawImage(img, x, y, w, h);
             }, false);
@@ -49,6 +53,7 @@
 
         function refreshDisplay()
         {
+            context.clearRect(0,0,canvas.width, canvas.height);
             for (var i = 0; i < roadImgStack.length; i++)
             {
                 setImg(roadImgStack[i], roadXStack[i], roadYStack[i], roadWStack[i], roadHStack[i])
@@ -79,7 +84,36 @@
             {
                 if (roadYStack[i] == 0)
                 {
-                    addRoadToStack(road, 0, -100, 200, 100);
+                    var newRoad = road;
+
+                    const nextRoad = getRandomInt(0, 3);
+                    if (nextRoad != 0)
+                    {
+                        if (nextRoad == 1)
+                        {
+                            if (roadXposition < 10)
+                            {
+                                newRoad = roadR;
+                            }
+                            else
+                            {
+                                newRoad = roadL;
+                            }
+                        }
+                        else
+                        {
+                            if (roadXposition > 90)
+                            {
+                                newRoad = roadL;
+                            }
+                            else
+                            {
+                                newRoad = roadR;
+                            }
+                        }
+                    }
+                    shiftRoadX(newRoad)
+                    addRoadToStack(newRoad, roadXposition, -100, 200, 100);
                 }
                 roadYStack[i] += 2;
                 if (roadYStack[i] == canvas.height)
@@ -88,7 +122,63 @@
                     i--;
                 }
             }
-            console.log(roadYStack.length);
+        }
+
+        function shiftRoadX(newRoad)
+        {
+            if (roadDirection == 's')
+            {
+                if (newRoad == roadL)
+                {
+                    roadDirection = 'l';
+                    roadXposition -= 22;
+                }
+                else if (newRoad == roadR)
+                {
+                    roadDirection = 'r';
+                    roadXposition += 22;
+                }
+            }
+            else if (roadDirection == 'l')
+            {
+                if (newRoad == roadL)
+                {
+                    roadXposition -= 44;
+                }
+                else if (newRoad == road)
+                {
+                    roadDirection = 's';
+                    roadXposition -= 22;
+                }
+                else if (newRoad == roadR)
+                {
+                    roadDirection = 'r';
+                }
+            }
+            else if (roadDirection == 'r')
+            {
+                if (newRoad == roadR)
+                {
+                    roadDirection = 'r';
+                    roadXposition += 44;
+                }
+                else if (newRoad == road)
+                {
+                    roadDirection = 's';
+                    roadXposition += 22;
+                }
+                else if (newRoad == roadL)
+                {
+                    roadDirection = 'l';
+                }
+            }
+        }
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
         }
 
         const sceneRefreshDelay = 10;
