@@ -29,6 +29,13 @@
         const carL = 'animacja3-img\\carL.png';
         const carR = 'animacja3-img\\carR.png';
 
+        const carW = 10;
+        const carH = 10;
+        const carY = 90;
+        var carModifier = 0;
+        var carX = canvas.width / 2.0;
+        var carImg = car;
+
         var roadUpdateDelay = 40;
         var roadDirection = "s";
         var roadXposition = 50;
@@ -58,6 +65,8 @@
             {
                 setImg(roadImgStack[i], roadXStack[i], roadYStack[i], roadWStack[i], roadHStack[i])
             }
+
+            moveCar();
         }
 
         function addRoadToStack(src, x, y, w, h)
@@ -174,12 +183,54 @@
             }
         }
 
+        function keyUpCallback(event){
+            switch (event.key) {
+                case "ArrowLeft":
+                case "ArrowRight":
+                    carModifier = 0;
+                    break;
+            }
+        }
+
+        function keyDownCallback(event){
+            switch (event.key) {
+                case "ArrowLeft":
+                    carModifier = -1;
+                    break;
+                case "ArrowRight":
+                    carModifier = 1;
+                    break;
+            }
+        }
+
+        function moveCar()
+        {
+            const carStep = 2;
+            carX += carModifier * carStep;
+            if (carModifier > 0)
+            {
+                carImg = carR;
+            }
+            else if (carModifier < 0)
+            {
+                carImg = carL;
+            }
+            else
+            {
+                carImg = car;
+            }
+            setImg(carImg, carX, carY, carW, carH);
+        }
+
 
         function getRandomInt(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min)) + min;
         }
+
+        window.addEventListener('keydown', this.keyDownCallback, event);
+        window.addEventListener('keyup', this.keyUpCallback, event);
 
         const sceneRefreshDelay = 10;
         setInterval(function refresh()
