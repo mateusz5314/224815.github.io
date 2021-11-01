@@ -18,10 +18,12 @@
 
 <body>
     <a href="index.html">Wroc</a><br/>
+    <p>Score: </p></p><p id="score"></p><br />
     <canvas id="carGame"> </canvas><br />
     <script>
         var canvas = document.getElementById('carGame'),
         context = canvas.getContext('2d');
+        const scoreId = 'score';
         const road = 'animacja3-img\\road.png';
         const roadL = 'animacja3-img\\roadL.png';
         const roadR = 'animacja3-img\\roadR.png';
@@ -31,12 +33,13 @@
 
         const carW = 10;
         const carH = 10;
-        const carY = 90;
+        const carY = canvas.height - canvas.height * 0.35;
         var carModifier = 0;
         var carX = canvas.width / 2.0;
         var carImg = car;
 
-        var roadUpdateDelay = 40;
+        var roadStep = 2;
+        var roadUpdateDelay = 20;
         var roadDirection = "s";
         var roadXposition = 50;
         var roadImgStack = [];
@@ -45,9 +48,38 @@
         var roadWStack = [];
         var roadHStack = [];
 
-        var images = [];
+        var roadEdgeL = [roadXposition + 40];
+        var roadEdgeR = [roadXposition + 155];
+
+        var score = 0;
 
         addRoadToStack(road, roadXposition, 0, 200, 100);
+
+        function checkOnRoad()
+        {
+            if (carX > roadEdgeL.at(0) && carX + carW < roadEdgeR.at(0))
+            {
+                score++;
+            }
+            else
+            {
+                roadUpdateDelay = 20;
+                roadDirection = "s";
+                roadXposition = 50;
+                roadImgStack = [];
+                roadXStack = [];
+                roadYStack = [];
+                roadWStack = [];
+                roadHStack = [];
+                roadEdgeL = [roadXposition + 40];
+                roadEdgeR = [roadXposition + 155];
+                carModifier = 0;
+                carX = canvas.width / 2.0;
+                carImg = car;
+                score = 0;
+                addRoadToStack(road, roadXposition, 0, 200, 100);
+            }
+        }
 
         function setImg(src, x, y, w, h)
         {
@@ -67,6 +99,8 @@
             }
 
             moveCar();
+            checkOnRoad();
+            document.getElementById(scoreId).innerHTML = score;
         }
 
         function addRoadToStack(src, x, y, w, h)
@@ -76,6 +110,20 @@
             roadYStack.push(y);
             roadWStack.push(w);
             roadHStack.push(h);
+            var change = 0.0;
+            if (src == roadL)
+            {
+                change = -0.37;
+            }
+            else if (src == roadR)
+            {
+                change = 0.37;
+            }
+            for (var i = 0; i < 247; i+=roadStep)
+            {
+                roadEdgeL.push(roadEdgeL.at(-1) + change);
+                roadEdgeR.push(roadEdgeR.at(-1) + change);
+            }
         }
 
         function removeRoadFromStack(i)
@@ -124,7 +172,9 @@
                     shiftRoadX(newRoad)
                     addRoadToStack(newRoad, roadXposition, -100, 200, 100);
                 }
-                roadYStack[i] += 2;
+                roadYStack[i] += roadStep;
+                roadEdgeL.shift();
+                roadEdgeR.shift();
                 if (roadYStack[i] == canvas.height)
                 {
                     removeRoadFromStack(i);
@@ -244,7 +294,6 @@
                         updateRoad();
                     },
                     roadUpdateDelay);
-
     </script>
 </body>
 </html>
