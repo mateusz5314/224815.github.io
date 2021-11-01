@@ -6,11 +6,103 @@
   <meta charset="utf-8">
   <meta name="description" content="Zrealizowanie gry w ramach zadania Animacja2.">
   <meta name="author" content="Mateusz Janiak">
+  <style>
+      #carGame{
+          background-color: green;
+          width: 800px;
+          height: 600px;
+          border: 2px solid #d3d3d3;
+      }
+  </style>
 </head>
 
 <body>
     <a href="index.html">Wroc</a><br/>
+    <canvas id="carGame"> </canvas><br />
     <script>
+        var canvas = document.getElementById('carGame'),
+        context = canvas.getContext('2d');
+        const road = 'animacja3-img\\road.png';
+        const roadL = 'animacja3-img\\roadL.png';
+        const roadR = 'animacja3-img\\roadR.png';
+        const car = 'animacja3-img\\car.png';
+        const carL = 'animacja3-img\\carL.png';
+        const carR = 'animacja3-img\\carR.png';
+
+        var roadUpdateDelay = 50;
+        var roadImgStack = [];
+        var roadXStack = [];
+        var roadYStack = [];
+        var roadWStack = [];
+        var roadHStack = [];
+
+        addRoadToStack(road, 0, 0, 200, 100);
+
+        function setImg(src, x, y, w, h)
+        {
+            img = new Image();
+            img.addEventListener('load', function() {
+                context.drawImage(img, x, y, w, h);
+            }, false);
+            img.src = src;
+        }
+
+        function refreshDisplay()
+        {
+            for (var i = 0; i < roadImgStack.length; i++)
+            {
+                setImg(roadImgStack[i], roadXStack[i], roadYStack[i], roadWStack[i], roadHStack[i])
+            }
+        }
+
+        function addRoadToStack(src, x, y, w, h)
+        {
+            roadImgStack.push(src);
+            roadXStack.push(x);
+            roadYStack.push(y);
+            roadWStack.push(w);
+            roadHStack.push(h);
+        }
+
+        function removeRoadFromStack(i)
+        {
+            roadImgStack.splice(i, 1);
+            roadXStack.splice(i, 1);
+            roadYStack.splice(i, 1);
+            roadWStack.splice(i, 1);
+            roadHStack.splice(i, 1);
+        }
+
+        function updateRoad()
+        {
+            for (var i = 0; i < roadYStack.length; i++)
+            {
+                if (roadYStack[i] == 0)
+                {
+                    addRoadToStack(road, 0, -100, 200, 100);
+                }
+                roadYStack[i] += 2;
+                if (roadYStack[i] == canvas.height)
+                {
+                    removeRoadFromStack(i);
+                    i--;
+                }
+            }
+            console.log(roadYStack.length);
+        }
+
+        const sceneRefreshDelay = 10;
+        setInterval(function refresh()
+                    {
+                        refreshDisplay();
+                    },
+                    sceneRefreshDelay);
+
+        setInterval(function refresh()
+                    {
+                        updateRoad();
+                    },
+                    roadUpdateDelay);
 
     </script>
 </body>
